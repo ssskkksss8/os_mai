@@ -8,7 +8,6 @@
 #include <sys/wait.h>
 #include <ctype.h>
 
-// Функция для преобразования строки в верхний регистр
 void convertToUpper(char* str) {
     while (*str) {
         *str = toupper((unsigned char)*str);
@@ -16,7 +15,6 @@ void convertToUpper(char* str) {
     }
 }
 
-// Функция для замены пробельных символов на символ "_"
 void replaceWhitespace(char* str) {
     while (*str) {
         if (isspace((unsigned char)*str)) {
@@ -42,7 +40,6 @@ int main() {
         return 1;
     }
 
-    // Создание первого дочернего процесса Child1
     pid_t child1_pid = fork();
     if (child1_pid == -1) {
         perror("fork");
@@ -55,13 +52,10 @@ int main() {
         // Ожидание данных от родительского процесса
         while (shared_memory[0] == '\0') {}
 
-
-        // Преобразование строки в верхний регистр
         convertToUpper(shared_memory);
 
         printf("Child1: Converted to uppercase: %s\n", shared_memory);
 
-        // Завершение Child1
         printf("Child1: Exiting\n");
         exit(0);
     }
@@ -79,12 +73,10 @@ int main() {
         // Ожидание данных от родительского процесса
         while (shared_memory[0] == '\0') {}
 
-        // Замена пробельных символов на "_"
         replaceWhitespace(shared_memory);
 
         printf("Child2: Replaced whitespace: %s\n", shared_memory);
 
-        // Завершение Child2
         printf("Child2: Exiting\n");
         exit(0);
     }
@@ -92,7 +84,6 @@ int main() {
     // Код родительского процесса
     printf("Parent: Started\n");
 
-    // Ввод строки с клавиатуры
     printf("Parent: Enter a string: ");
     fgets(shared_memory, sizeof(char) * 100, stdin);
 
@@ -100,7 +91,6 @@ int main() {
     waitpid(child1_pid, NULL, 0);
     waitpid(child2_pid, NULL, 0);
 
-    // Вывод результата
     printf("Parent: Result: %s\n", shared_memory);
 
     // Удаление отображения
